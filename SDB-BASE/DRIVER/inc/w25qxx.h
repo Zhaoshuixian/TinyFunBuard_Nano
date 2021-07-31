@@ -1,36 +1,29 @@
-/*********************************************************************
- *
- *                           w25qxx.h
- *
- *********************************************************************
- * Ãè    Êö: µ¥Æ¬»úÍâ²¿FALSH-W25Q128Çý¶¯º¯ÊýÍ·ÎÄ¼þ 
- * ¿ª·¢Æ½Ì¨: MDK5
- ********************************************************************/
+
 
 #ifndef __FLASH_H
 #define __FLASH_H			    
 
 #include "stm32f10x.h"
 	  
-//W25QÏµÁÐÐ¾Æ¬¶ÁÈ¡IDÖµ   
+//W25QÏµï¿½ï¿½Ð¾Æ¬ï¿½ï¿½È¡IDÖµ   
 #define W25Q08 	0XEF13 	
 #define W25Q16 	0XEF14
 #define W25Q32 	0XEF15
 #define W25Q64 	0XEF16
 #define W25Q128	0XEF17
 
-#define FLASH_SIZE  128*1024*1024   //FLASH ´óÐ¡Îª16M×Ö½Ú
+#define FLASH_SIZE  128*1024*1024   //FLASH ï¿½ï¿½Ð¡Îª16Mï¿½Ö½ï¿½
 
-#define spi_num  1                //ºê¶¨Òå W25QXX_Init(u8 SPIx)Õâ¸ö³õÊ¼»¯º¯ÊýµÄÊäÈë²ÎÊý£¬ÕâÀïÊµ¼ÊÓÃµ½ÄÄ¸öSPI¿Ú¾ÍÉèÖÃÎª¶ÔÓ¦SPI¿ÚÐòºÅ¼´¿É
-								 //ÈçÕâÀïÓÃµ½SPI1£¬Ôò½«spi_num¶¨ÒåÎª1ÄÇ¿É
+#define spi_num  1                //ï¿½ê¶¨ï¿½ï¿½ W25QXX_Init(u8 SPIx)ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½Ãµï¿½ï¿½Ä¸ï¿½SPIï¿½Ú¾ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ó¦SPIï¿½ï¿½ï¿½ï¿½Å¼ï¿½ï¿½ï¿½
+								 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½SPI1ï¿½ï¿½ï¿½ï¿½spi_numï¿½ï¿½ï¿½ï¿½Îª1ï¿½Ç¿ï¿½
 
-extern u16 W25QXX_TYPE;		    //¶¨ÒåW25QXXÐ¾Æ¬ÐÍºÅ	
+extern u16 W25QXX_TYPE;		    //ï¿½ï¿½ï¿½ï¿½W25QXXÐ¾Æ¬ï¿½Íºï¿½	
 
 
 				 
 ////////////////////////////////////////////////////////////////////////////
  
-//Ö¸Áî±í
+//Ö¸ï¿½ï¿½ï¿½
 #define W25X_WriteEnable		0x06 
 #define W25X_WriteDisable		0x04 
 #define W25X_ReadStatusReg		0x05 
@@ -49,20 +42,20 @@ extern u16 W25QXX_TYPE;		    //¶¨ÒåW25QXXÐ¾Æ¬ÐÍºÅ
 #define W25X_JedecDeviceID		0x9F 
 
 
-u16  W25QXX_ReadID(void);  	    		                                           //¶ÁÈ¡FLASH ID
+u16  W25QXX_ReadID(void);  	    		                                           //ï¿½ï¿½È¡FLASH ID
 void W25QXX_Init(u8 num);
-u8   W25QXX_ReadSR(u8 num);        		                                        //¶ÁÈ¡×´Ì¬¼Ä´æÆ÷ 
-void W25QXX_Write_SR(u8 sr,u8 num);                                            //Ð´×´Ì¬¼Ä´æÆ÷
-void W25QXX_Write_Enable(u8 num);  		                                      //Ð´Ê¹ÄÜ 
-void W25QXX_Write_Disable(u8 num);		                                     //Ð´±£»¤
+u8   W25QXX_ReadSR(u8 num);        		                                        //ï¿½ï¿½È¡×´Ì¬ï¿½Ä´ï¿½ï¿½ï¿½ 
+void W25QXX_Write_SR(u8 sr,u8 num);                                            //Ð´×´Ì¬ï¿½Ä´ï¿½ï¿½ï¿½
+void W25QXX_Write_Enable(u8 num);  		                                      //Ð´Ê¹ï¿½ï¿½ 
+void W25QXX_Write_Disable(u8 num);		                                     //Ð´ï¿½ï¿½ï¿½ï¿½
 void W25QXX_Write_NoCheck(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite);
-void W25QXX_Read(u8* pBuffer,u32 ReadAddr,u16 NumByteToRead,u8 num) ;      //¶ÁÈ¡flash
-void W25QXX_Write(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite);          //Ð´Èëflash
-void W25QXX_Erase_Chip(u8 num);    	  	                                 //ÕûÆ¬²Á³ý
-void W25QXX_Erase_Sector(u32 Dst_Addr,u8 num);	                        //ÉÈÇø²Á³ý
-void W25QXX_Wait_Busy(void);           	                               //µÈ´ý¿ÕÏÐ
-void W25QXX_PowerDown(u8 num);        	                              //½øÈëµôµçÄ£Ê½
-void W25QXX_WAKEUP(u8 num);				                             //»½ÐÑ
+void W25QXX_Read(u8* pBuffer,u32 ReadAddr,u16 NumByteToRead,u8 num) ;      //ï¿½ï¿½È¡flash
+void W25QXX_Write(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite);          //Ð´ï¿½ï¿½flash
+void W25QXX_Erase_Chip(u8 num);    	  	                                 //ï¿½ï¿½Æ¬ï¿½ï¿½ï¿½ï¿½
+void W25QXX_Erase_Sector(u32 Dst_Addr,u8 num);	                        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void W25QXX_Wait_Busy(void);           	                               //ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½
+void W25QXX_PowerDown(u8 num);        	                              //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
+void W25QXX_WAKEUP(u8 num);				                             //ï¿½ï¿½ï¿½ï¿½
 #endif
 
 

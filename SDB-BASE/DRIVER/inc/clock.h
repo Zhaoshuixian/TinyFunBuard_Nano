@@ -5,8 +5,6 @@
 #include "pindef.h"
 #include "stm32f10x_conf.h"
 
-//时间结构体
-//公历年月日周
 typedef struct 
 {
 	unsigned short year;	
@@ -18,7 +16,7 @@ typedef struct
 	unsigned char sec;
 }Calendar_obj;  
 
-extern Calendar_obj Calendar;    //时钟结构体
+extern Calendar_obj Calendar;    
 
 void RTC_Configuration(void);
 void NVIC_Configuration(void);

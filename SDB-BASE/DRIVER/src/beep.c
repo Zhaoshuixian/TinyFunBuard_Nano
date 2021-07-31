@@ -3,45 +3,39 @@
 #include "tim.h"
 #include "rrs.h"
 
-Beep_st Beep=
-{
- 0,//conter
- 2,//num
- 1,//en
- 500//rt
-};
+buzzer_st buzzer;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Beep_Thread(Beep_st *Beep_info)
+void buzzer_driver(buzzer_st *const me)
 {
-	if(0<Beep_info->num)
+	if(0<me->num)
 	{
-		if(5*200<=Beep_info->conter++)//·äÃù¼ä¸ôÊ±³¤
+		if(5*200<=me->conter++)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 		{
-			Beep_info->conter=0;
-			Beep_info->num--;
-			Beep_info->rt=500;//ÖØÔØ
+			me->conter=0;
+			me->num--;
+			me->rt=500;//ï¿½ï¿½ï¿½ï¿½
 		}	
 	}			
-	if(0<Beep_info->rt)
+	if(0<me->rt)
 	{
-		Beep_info->rt--;
-		Beep_info->en=~Beep_info->en;
+		me->rt--;
+		me->en=~me->en;
   }
 	else
 	{
-		Beep_info->en=0;
+		me->en=0;
 	}
-	BEEP_SW(Beep_info->en);
+	BEEP_SW(me->en);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TIM2_IRQHandler(void)
 {
-	if(TIM_GetITStatus(TIM2,TIM_IT_Update)!= RESET) //¼ì²éÖ¸¶¨µÄTIMÖÐ¶Ï·¢ÉúÓë·ñ:TIM ÖÐ¶ÏÔ´ 
+	if(TIM_GetITStatus(TIM2,TIM_IT_Update)!= RESET) //ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½TIMï¿½Ð¶Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:TIM ï¿½Ð¶ï¿½Ô´ 
 	{
-    Beep_Thread(&Beep);
-		TIM_ClearITPendingBit(TIM2,TIM_IT_Update);  //Çå³ýTIMxµÄÖÐ¶Ï´ý´¦ÀíÎ»:TIM ÖÐ¶ÏÔ´		
+        buzzer_driver(&buzzer);
+		TIM_ClearITPendingBit(TIM2,TIM_IT_Update);  //ï¿½ï¿½ï¿½TIMxï¿½ï¿½ï¿½Ð¶Ï´ï¿½ï¿½ï¿½ï¿½ï¿½Î»:TIM ï¿½Ð¶ï¿½Ô´		
    }	
 }
 

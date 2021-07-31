@@ -6,9 +6,9 @@
 #include "pindef.h"
 #include "stm32f10x_conf.h"
 
-void TIM1_Init(void);
-void TIM2_Init(void);
-void TIM3_Init(void);
+void tim1_init(void);
+void tim2_init(void);
+void tim3_init(void);
 
 
 #endif 

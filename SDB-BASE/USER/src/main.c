@@ -1,10 +1,10 @@
 
 /*
-Ó²¼þÆ½Ì¨:STM32F103C8T6×Ô¿ª·¢²âÊÔ°å
-Íê³É¹¦ÄÜÓÐ£º
-1.ÎÂ¶È²âÁ¿£¬
-2.ºìÍâ½âÂë
-3.OLEDÇý¶¯
+Ó²ï¿½ï¿½Æ½Ì¨:STM32F103C8T6ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô°ï¿½
+ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½Ð£ï¿½
+1.ï¿½Â¶È²ï¿½ï¿½ï¿½ï¿½ï¿½
+2.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+3.OLEDï¿½ï¿½ï¿½ï¿½
 4.RTC
 5.
 6.
@@ -23,7 +23,7 @@
 #include "led.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void STM32F103_RCC_Init(void)//STM32f100C8T6Ö÷Æµ×î´óÎª24MHz
+void stm32f10x_rcc_init(void)//
 {
 	 RCC_DeInit(); 
 	 RCC_HSEConfig(RCC_HSE_ON);
@@ -37,44 +37,31 @@ void STM32F103_RCC_Init(void)//STM32f100C8T6Ö÷Æµ×î´óÎª24MHz
 		 FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);													
 		 RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9);//72M
 		 RCC_PLLCmd(ENABLE);
-		 RCC_ADCCLKConfig(RCC_PCLK2_Div6); //ADC×î´óÊ±ÖÓ²»³¬¹ý14M
+		 RCC_ADCCLKConfig(RCC_PCLK2_Div6); //
 		 while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET){}
 					 RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK );
 		 while(RCC_GetSYSCLKSource() != 0x08){}		
-		 RCC_ClockSecuritySystemCmd(ENABLE);                 //Ê¹ÄÜÏµÍ³°²È«Ê±ÖÓ 
+		 RCC_ClockSecuritySystemCmd(ENABLE);                 
 		 RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
 		 RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB| RCC_APB2Periph_GPIOC|RCC_APB2Periph_AFIO|RCC_APB2Periph_USART1|RCC_APB2Periph_ADC1, ENABLE);
-		 RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);//¿ªDMAÉè±¸Ê±ÖÓ
+		 RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);//
 		}
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void SysInit(void)
-{
- STM32F103_RCC_Init();
-//TIM2_Init();//FOR BEEP
-	TIM3_Init();//FOR RRS
-//	USART1_Init();//FOR EXT USART
-//	AT24CXX_Init();//FOR EEPROM
-  IR_Init();//FOR INFRADE
-	TIM1_Init();//FOR INFRADE
-	RTC_Init(); //RTC
-  LED_Init();  //FOR DOUBLE LED
-	NTC_Init(); //FOR NTC TEMPERATURE	
-	OLED_Init(); //FOR 0.96OLED
-
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void RT_Task(void)
-{
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 int main(void)
 {  
-  SysInit();
+  stm32f10x_rcc_init();
+//TIM2_Init();//FOR BEEP
+  tim3_init();//FOR RRS
+//	USART1_Init();//FOR EXT USART
+//	at24cxx_init();//FOR EEPROM
+  infrade_init();//FOR INFRADE
+  tim1_init();//FOR INFRADE
+  rtc_init(); //RTC
+  led_init();  //FOR DOUBLE LED
+  ntc_init(); //FOR NTC TEMPERATURE	
+  OLED_Init(); //FOR 0.96OLED
   while(1)
   {
 		ST_Task();

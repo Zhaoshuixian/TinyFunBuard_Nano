@@ -9,7 +9,6 @@
 #include "led.h"
 #include "menu.h"
 
-/////////////////////////////////·ÖÊ±ÈÎÎñÔËĞĞµ÷¶ÈÅäÖÃ//////////////////////////////////////////
 Task_Struct Tasks[]=
 {
 	{0,TEMP_TASK_TIME,TEMP_TASK_TIME,Temperature_Thread},	
@@ -21,27 +20,25 @@ Task_Struct Tasks[]=
 
 unsigned char TASK_NUM = sizeof(Tasks)/sizeof(Task_Struct);
 
-/////////////////////////////////////·ÖÊ±ÈÎÎñµ÷¶È//////////////////////////////////////
-void ST_Task(void)//ÈÎÎñ´¦Àí
+void ST_Task(void)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
   static unsigned char i;
 	for (i=0; i<TASK_NUM ; i++) //
 	{
-		if(Tasks[i].IsRun) //ÈÎÎñÖ´ĞĞ±êÖ¾
+		if(Tasks[i].IsRun) //ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ğ±ï¿½Ö¾
 		{
-      Tasks[i].TaskPointer();//Ö´ĞĞµ±Ç°ÈÎÎñ
-			Tasks[i].IsRun = 0;//Çå³ı±êÖ¾
+      Tasks[i].TaskPointer();//Ö´ï¿½Ğµï¿½Ç°ï¿½ï¿½ï¿½ï¿½
+			Tasks[i].IsRun = 0;//ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾
 		}
 	}
 }
 
-///////////////////////////////////ÏµÍ³ÈÎÎñµ÷¶ÈÊ±»ù////////////////////////////////////////
 void RRS_Handler(void)
 {
   static unsigned char i;
-	if(TIM_GetITStatus(TIM3,TIM_IT_Update)!= RESET) //¼ì²éÖ¸¶¨µÄTIMÖĞ¶Ï·¢ÉúÓë·ñ:TIM ÖĞ¶ÏÔ´ 
+	if(TIM_GetITStatus(TIM3,TIM_IT_Update)!= RESET) //
 	{
-		  for(i=0;i<TASK_NUM;i++) //±éÀúÈÎÎñ
+		  for(i=0;i<TASK_NUM;i++) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       {
 				if(Tasks[i].TaskTimer)
 				{
@@ -53,7 +50,7 @@ void RRS_Handler(void)
 					}
 				}
 			}
-		TIM_ClearITPendingBit(TIM3,TIM_IT_Update);  //Çå³ıTIMxµÄÖĞ¶Ï´ı´¦ÀíÎ»:TIM ÖĞ¶ÏÔ´		
+		TIM_ClearITPendingBit(TIM3,TIM_IT_Update);  //	
    }
 }
 

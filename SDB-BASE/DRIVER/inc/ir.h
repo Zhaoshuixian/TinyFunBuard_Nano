@@ -5,7 +5,7 @@
 #include "pindef.h"
 #include "stm32f10x_conf.h"
 
-/*****Ò£¿Ø¼üÖµ´úÂëºê****/
+/*****Ò£ï¿½Ø¼ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½****/
 #define  PWR_SW   0XA2
 #define  MENU     0XE2
 #define  TEST     0X22
@@ -51,10 +51,10 @@ typedef struct
 	data_st data;
 }ir_st;
 
-#define IR_IRQHandler  TIM1_CC_IRQHandler  /*´Ë´¦²»ÄÜÊ¹ÓÃTIM1_UP_IRQHandler*/
+#define IR_IRQHandler  TIM1_CC_IRQHandler  /*ï¿½Ë´ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½TIM1_UP_IRQHandler*/
 
-extern ir_st ir;
-void IR_Thread(void);
+extern infrade_st iinfrader;
+
 
 #endif 
 

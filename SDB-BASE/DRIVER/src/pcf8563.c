@@ -8,8 +8,8 @@
 Calendar_obj Calendar={2018,10,15,12,12,0,0};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//PCF8563Ê±ÖÓÍ£Ö¹Ö¸Áî 
-unsigned char PCF8563_stop(void)
+//PCF8563Ê±ï¿½ï¿½Í£Ö¹Ö¸ï¿½ï¿½ 
+unsigned char pcf8563_stop(void)
 {
  	unsigned char stopcode=0x20;
  	if(0==PCF8563_WriteLenByte(CTRL_STU1,&stopcode,1))
@@ -18,8 +18,8 @@ unsigned char PCF8563_stop(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//PCF8563Ê±ÖÓÆô¶¯Ö¸Áî
-unsigned char PCF8563_start(void)
+//PCF8563Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½
+unsigned char pcf8563_start(void)
 {
  	unsigned char startcode=0x00;
 	if(0==PCF8563_WriteLenByte(CTRL_STU1,&startcode,1)) 
@@ -29,61 +29,54 @@ unsigned char PCF8563_start(void)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-////ÖÐ¶Ï²úÉúºóÇå³ýTF±êÖ¾Î»
-unsigned char PCF8563_ClearINT(void)
+////ï¿½Ð¶Ï²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½TFï¿½ï¿½Ö¾Î»
+unsigned char pcf8563_clear_interrupt(void)
 {
  	unsigned char temp=0x12;
-	if(0==PCF8563_WriteLenByte(CTRL_STU2,&temp,1))
-		return 0;
+	if(0==PCF8563_WriteLenByte(CTRL_STU2,&temp,1)) return 0;
  	else return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//ÔÚPCF8563Ö¸¶¨µØÖ·¶Á³öÒ»¸öÊý¾Ý
-//ReadAddr:¿ªÊ¼¶ÁÊýµÄµØÖ·  
-//·µ»ØÖµ  :¶Áµ½µÄÊý¾Ý
+//ï¿½ï¿½PCF8563Ö¸ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//ReadAddr:ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ö·  
+//ï¿½ï¿½ï¿½ï¿½Öµ  :ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 unsigned char PCF8563_ReadOneByte(unsigned short int ReadAddr)
 {				  
 	unsigned char temp=0;	
-  IIC2_Start();  
+
+    IIC2_Start();  
 	
-	IIC2_Send_Byte(PCF8563_ADDR_WR);   //·¢ËÍÆ÷¼þµØÖ·PCF8563_Read_Add,Ð´Êý¾Ý 	
+	IIC2_Send_Byte(PCF8563_ADDR_WR);   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·PCF8563_Read_Add,Ð´ï¿½ï¿½ï¿½ï¿½ 	
 	IIC2_Wait_Ack();	
     
-	IIC2_Send_Byte(ReadAddr%256);   //·¢ËÍµÍµØÖ·
+	IIC2_Send_Byte(ReadAddr%256);   //ï¿½ï¿½ï¿½ÍµÍµï¿½Ö·
 	IIC2_Wait_Ack();
 	
 	IIC2_Start();  	 	   
-	IIC2_Send_Byte(PCF8563_ADDR_RD);           //½øÈë½ÓÊÕÄ£Ê½		   
+	IIC2_Send_Byte(PCF8563_ADDR_RD);           //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½		   
 	IIC2_Wait_Ack();	 
 	temp=IIC2_Read_Byte(0);		
-	IIC2_NAck();//·¢ËÍ·ÇÓ¦Î»	
-	IIC2_Stop();//²úÉúÒ»¸öÍ£Ö¹Ìõ¼þ	    
+	IIC2_NAck();//ï¿½ï¿½ï¿½Í·ï¿½Ó¦Î»	
+	IIC2_Stop();//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Í£Ö¹ï¿½ï¿½ï¿½ï¿½	    
 	return temp;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//ÔÚPCF8563Ö¸¶¨µØÖ·Ð´ÈëÒ»¸öÊý¾Ý
-//WriteAddr  :Ð´ÈëÊý¾ÝµÄÄ¿µÄµØÖ·    
-//DataToWrite:ÒªÐ´ÈëµÄÊý¾Ý
 void PCF8563_WriteOneByte(unsigned short int WriteAddr,unsigned char DataToWrite)
 {				   	  	    																 
   IIC2_Start();  
-	IIC2_Send_Byte(PCF8563_ADDR_WR);   //·¢ËÍÆ÷¼þµØÖ·PCF8563_Write_Add,Ð´Êý¾Ý 
+	IIC2_Send_Byte(PCF8563_ADDR_WR);   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·PCF8563_Write_Add,Ð´ï¿½ï¿½ï¿½ï¿½ 
 	IIC2_Wait_Ack();	   
-  IIC2_Send_Byte(WriteAddr%256);   //·¢ËÍµÍµØÖ·
+  IIC2_Send_Byte(WriteAddr%256);   //ï¿½ï¿½ï¿½ÍµÍµï¿½Ö·
 	IIC2_Wait_Ack(); 	 										  		   
-	IIC2_Send_Byte(DataToWrite);     //·¢ËÍ×Ö½Ú							   
+	IIC2_Send_Byte(DataToWrite);     //ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½							   
 	IIC2_Wait_Ack();  		    	   
-  IIC2_Stop();//²úÉúÒ»¸öÍ£Ö¹Ìõ¼þ 
+  IIC2_Stop();//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Í£Ö¹ï¿½ï¿½ï¿½ï¿½ 
   xDelay_ms(10);	 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//ÔÚPCF8563ÀïÃæµÄÖ¸¶¨µØÖ·¿ªÊ¼Ð´Èë³¤¶ÈÎªLenµÄÊý¾Ý
-//¸Ãº¯ÊýÓÃÓÚÐ´Èë16bit»òÕß32bitµÄÊý¾Ý.
-//WriteAddr  :¿ªÊ¼Ð´ÈëµÄµØÖ·  
-//ptChar:Êý¾ÝÊý×éÊ×µØÖ·
-//Len        :ÒªÐ´ÈëÊý¾ÝµÄ³¤¶È2,4
+
 unsigned char PCF8563_WriteLenByte(unsigned short int WriteAddr,unsigned char *ptChar,unsigned char Len)
 {  	
 	unsigned char t;
@@ -99,11 +92,6 @@ unsigned char PCF8563_WriteLenByte(unsigned short int WriteAddr,unsigned char *p
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//ÔÚPCF8563ÀïÃæµÄÖ¸¶¨µØÖ·¿ªÊ¼¶Á³ö³¤¶ÈÎªLenµÄÊý¾Ý
-//¸Ãº¯ÊýÓÃÓÚ¶Á³ö16bit»òÕß32bitµÄÊý¾Ý.
-//ReadAddr   :¿ªÊ¼¶Á³öµÄµØÖ· 
-//ptChar:Êý¾ÝÊý×éÊ×µØÖ·
-//Len        :Òª¶Á³öÊý¾ÝµÄ³¤¶È2,4
 unsigned char PCF8563_ReadLenByte(unsigned short int ReadAddr,unsigned char *ptChar,unsigned char Len)
 {  	
 
@@ -114,8 +102,8 @@ unsigned char PCF8563_ReadLenByte(unsigned short int ReadAddr,unsigned char *ptC
 		*ptChar++=PCF8563_ReadOneByte(ReadAddr++);
 	}
 	
-	//¼ì²âÊ±¼ä·µ»ØÊÇ·ñÕýÈ·
-	//µ±ÐÇÆÚ7Ê±£¬ÎªÖµÎª0
+	//ï¿½ï¿½ï¿½Ê±ï¿½ä·µï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½È·
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½7Ê±ï¿½ï¿½ÎªÖµÎª0
 	if((temp[5]==0)||(temp[3]==0))
 	{
 		return 1;
@@ -123,7 +111,7 @@ unsigned char PCF8563_ReadLenByte(unsigned short int ReadAddr,unsigned char *ptC
 	return 0;
 }
 
-/////////////////////////Ê®½øÖÆ×ªBCD//////////////////////////////////////
+/////////////////////////Ê®ï¿½ï¿½ï¿½ï¿½×ªBCD//////////////////////////////////////
 
 unsigned char Dec_ToBcd(unsigned char Dec_Val)
 {
@@ -132,7 +120,7 @@ unsigned char Dec_ToBcd(unsigned char Dec_Val)
 	return Bcd_Val;
 }
 
-///////////////////////////BCD×ªÊ®½øÖÆ////////////////////////////////////
+///////////////////////////BCD×ªÊ®ï¿½ï¿½ï¿½ï¿½////////////////////////////////////
 
 unsigned char Bcd_ToDec(unsigned char Bcd_Val)
 {
@@ -141,32 +129,32 @@ unsigned char Bcd_ToDec(unsigned char Bcd_Val)
 	return Dec_Val;
 }
 
-////////////////////³õÊ¼»¯////////////////////////////
+////////////////////ï¿½ï¿½Ê¼ï¿½ï¿½////////////////////////////
 void PCF8563_RTC_Init(void)
 {
 	
 	PCF8563_IIC_Init();
-	PCF8563_start();	//Ê±ÖÓÆô¶¯
-	//µÚÒ»´ÎÅäÖÃ
-	if (PCF8563_ReadOneByte(ALARM_MIN_REG) != 0x88)		//Ð¾Æ¬ÊÇ·ñÒÑ¾­ÅäÖÃ¹ý£¬Ê¹ÓÃ·ÖÖÓ±¨¾¯¼Ä´æÆ÷×÷ÎªÅÐ¶Ï£¬ÖÐ¶Ï¹Ø±Õ
+	PCF8563_start();	//Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	if (PCF8563_ReadOneByte(ALARM_MIN_REG) != 0x88)		//Ð¾Æ¬ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ã¹ï¿½ï¿½ï¿½Ê¹ï¿½Ã·ï¿½ï¿½Ó±ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Ð¶Ï£ï¿½ï¿½Ð¶Ï¹Ø±ï¿½
 	{	 			
- 		PCF8563_WriteOneByte(ALARM_MIN_REG,0X88);//½«Êý¾ÝÐ´ÈëPCF8563ÏàÓ¦¼Ä´æÆ÷
-		RTC_Set_F1(&Calendar);   //ÉèÖÃÊ±¼ä£¬Äê¡¢ÔÂ¡¢ÈÕ¡¢Ê±¡¢·Ö¡¢Ãë¡£
+ 		PCF8563_WriteOneByte(ALARM_MIN_REG,0X88);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½PCF8563ï¿½ï¿½Ó¦ï¿½Ä´ï¿½ï¿½ï¿½
+		RTC_Set_F1(&Calendar);   //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä£¬ï¿½ê¡¢ï¿½Â¡ï¿½ï¿½Õ¡ï¿½Ê±ï¿½ï¿½ï¿½Ö¡ï¿½ï¿½ë¡£
 	}  
-//	RTC_Get();//¸üÐÂÊ±¼ä
+//	RTC_Get();//ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 }
 
 
-//////////////////////////////////////////RTCÊ±¼äÉèÖÃÐ´Èë/////////////////////////////////////////////////////
+//////////////////////////////////////////RTCÊ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½/////////////////////////////////////////////////////
 void RTC_Set_F1(Calendar_obj *Calendar_info)
 {
 	 unsigned char b_time[7]={0};
-	//8563Ê¹ÓÃµÄÊÇBCDÂë£¬ËùÒÔÐèÒª½«Ê®Áù½øÖÆ×ª»»³ÉBCDÂë
-	 (19==(Calendar_info->w_year/100))?(Calendar_info->w_month|=0x80):(Calendar_info->w_month&=~0x80);//ÅÐ¶ÏÊÀ¼Í
+	//8563Ê¹ï¿½Ãµï¿½ï¿½ï¿½BCDï¿½ë£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Ê®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½BCDï¿½ï¿½
+	 (19==(Calendar_info->w_year/100))?(Calendar_info->w_month|=0x80):(Calendar_info->w_month&=~0x80);//ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½
 	 b_time[6]=Dec_ToBcd((unsigned char)(Calendar_info->w_year%100));//0~99
-	 b_time[5]=Dec_ToBcd(Calendar_info->w_month);//ÊÀ¼Í£¨bit7£©+ÔÂ·Ý  bit7=0±íÊ¾Îª20xx,bit7=1±íÊ¾19xx;
+	 b_time[5]=Dec_ToBcd(Calendar_info->w_month);//ï¿½ï¿½ï¿½Í£ï¿½bit7ï¿½ï¿½+ï¿½Â·ï¿½  bit7=0ï¿½ï¿½Ê¾Îª20xx,bit7=1ï¿½ï¿½Ê¾19xx;
 	 b_time[3]=Dec_ToBcd(Calendar_info->w_date);
-	 if(7==Calc_Week(Calendar_info))//ÐÇÆÚ)////¾­»ùÄ·À­¶ûÉ­Ëã¹«Ê½1~7±íÊ¾ÐÇÆÚÒ»ÖÁÐÇÆÚÈÕ//PCF8563µÄÐÇÆÚË³Ðò 0~6-->ÐÇÆÚÈÕ~ÐÇÆÚÁù
+	 if(7==Calc_Week(Calendar_info))//ï¿½ï¿½ï¿½ï¿½)////ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½É­ï¿½ã¹«Ê½1~7ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½//PCF8563ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ 0~6-->ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 {
 		 b_time[4]=0;
 	 }
@@ -178,9 +166,9 @@ void RTC_Set_F1(Calendar_obj *Calendar_info)
 	 b_time[2]=Dec_ToBcd(Calendar_info->hour);
 	 b_time[1]=Dec_ToBcd(Calendar_info->min);
 	 b_time[0]=Dec_ToBcd(Calendar_info->sec);
-	 //¶ÁÐ´Êý¾Ý·½Ê½
-	 //1.Ã¿´Î¶ÁÐ´Íêºó£¬ÄÚÇ¶×ÖµØÖ·¼Ä´æÆ÷¶¼»á×Ô¶¯ÔöÁ¿Æ«ÒÆ
-	 //2.»òÖðµØÖ·¶ÁÐ´
+	 //ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Ý·ï¿½Ê½
+	 //1.Ã¿ï¿½Î¶ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½Öµï¿½Ö·ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½
+	 //2.ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½Ð´
 	 PCF8563_WriteOneByte(SEC_REG	,b_time[0]);
 	 PCF8563_WriteOneByte(MIN_REG	,b_time[1]);
 	 PCF8563_WriteOneByte(HOUR_REG,b_time[2]);
@@ -191,17 +179,17 @@ void RTC_Set_F1(Calendar_obj *Calendar_info)
 
 }
 
-//////////////////////////////////////////RTCÊ±¼äÉèÖÃÐ´Èë£¨º¬ÐÇÆÚÐÎ²Î£©/////////////////////////////////////////////////////
+//////////////////////////////////////////RTCÊ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ë£¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î²Î£ï¿½/////////////////////////////////////////////////////
 void RTC_Set_F2(Calendar_obj *Calendar_info)
 {
-	//ÊÊÓ¦PCF8563µÄÐÇÆÚË³Ðò 0~6-->ÐÇÆÚÈÕ~ÐÇÆÚÁù
+	//ï¿½ï¿½Ó¦PCF8563ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ 0~6-->ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 unsigned char b_time[7]={0};
-	//8563Ê¹ÓÃµÄÊÇBCDÂë£¬ËùÒÔÐèÒª½«Ê®Áù½øÖÆ×ª»»³ÉBCDÂë
-	 (19==(Calendar_info->w_year/100))?(Calendar_info->w_month|=0x80):(Calendar_info->w_month&=~0x80);//ÅÐ¶ÏÊÀ¼Í
+	//8563Ê¹ï¿½Ãµï¿½ï¿½ï¿½BCDï¿½ë£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Ê®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½BCDï¿½ï¿½
+	 (19==(Calendar_info->w_year/100))?(Calendar_info->w_month|=0x80):(Calendar_info->w_month&=~0x80);//ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½
 	 b_time[6]=Dec_ToBcd((unsigned char)(Calendar_info->w_year%100));//0~99
-	 b_time[5]=Dec_ToBcd(Calendar_info->w_month);//ÊÀ¼Í£¨bit7£©+ÔÂ·Ý  bit7=0±íÊ¾Îª20xx,bit7=1±íÊ¾19xx;
+	 b_time[5]=Dec_ToBcd(Calendar_info->w_month);//ï¿½ï¿½ï¿½Í£ï¿½bit7ï¿½ï¿½+ï¿½Â·ï¿½  bit7=0ï¿½ï¿½Ê¾Îª20xx,bit7=1ï¿½ï¿½Ê¾19xx;
 	 b_time[3]=Dec_ToBcd(Calendar_info->w_date);
-	 if(0==Calendar_info->w_week)//ÐÇÆÚ)
+	 if(0==Calendar_info->w_week)//ï¿½ï¿½ï¿½ï¿½)
 	 {
 		 b_time[4]=7;
 	 }
@@ -213,9 +201,9 @@ void RTC_Set_F2(Calendar_obj *Calendar_info)
 	 b_time[2]=Dec_ToBcd(Calendar_info->hour);
 	 b_time[1]=Dec_ToBcd(Calendar_info->min);
 	 b_time[0]=Dec_ToBcd(Calendar_info->sec);
-	 //¶ÁÐ´Êý¾Ý·½Ê½
-	 //1.Ã¿´Î¶ÁÐ´Íêºó£¬ÄÚÇ¶×ÖµØÖ·¼Ä´æÆ÷¶¼»á×Ô¶¯ÔöÁ¿Æ«ÒÆ
-	 //2.»òÖðµØÖ·¶ÁÐ´
+	 //ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Ý·ï¿½Ê½
+	 //1.Ã¿ï¿½Î¶ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½Öµï¿½Ö·ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½
+	 //2.ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½Ð´
 	 PCF8563_WriteOneByte(SEC_REG	,b_time[0]);
 	 PCF8563_WriteOneByte(MIN_REG	,b_time[1]);
 	 PCF8563_WriteOneByte(HOUR_REG,b_time[2]);
@@ -226,7 +214,7 @@ void RTC_Set_F2(Calendar_obj *Calendar_info)
 
 }
 
-/////////////////////////¶ÁRTC////////////////////////////////////////////////////
+/////////////////////////ï¿½ï¿½RTC////////////////////////////////////////////////////
 void RTC_Get(void)
 {
     unsigned char temp[7]={0};
@@ -234,7 +222,7 @@ void RTC_Get(void)
 		temp[1]= PCF8563_ReadOneByte(MIN_REG)&0x7F;
 		temp[2]= PCF8563_ReadOneByte(HOUR_REG)&0x3F;
 		temp[3]= PCF8563_ReadOneByte(DAY_REG)&0x3F;
-		temp[4]= PCF8563_ReadOneByte(WEEK_REG)&0x07;//ÐÇÆÚ
+		temp[4]= PCF8563_ReadOneByte(WEEK_REG)&0x07;//ï¿½ï¿½ï¿½ï¿½
 		temp[5]= PCF8563_ReadOneByte(MON_REG)&0x1F;
 		temp[6]= PCF8563_ReadOneByte(YEAR_REG);
 		
@@ -245,29 +233,29 @@ void RTC_Get(void)
 		Calendar.w_week=Bcd_ToDec(temp[4]);
 		Calendar.w_month=Bcd_ToDec(temp[5]);		
 		Calendar.w_year=Bcd_ToDec(temp[6]);
-		//¾­»ùÄ·À­¶ûÉ­Ëã¹«Ê½1~7±íÊ¾ÐÇÆÚÒ»ÖÁÐÇÆÚÈÕ//PCF8563µÄÐÇÆÚË³Ðò 0~6-->ÐÇÆÚÈÕ~ÐÇÆÚÁù
-		if(7==Calendar.w_week)   Calendar.w_week=0;	//ÐÇÆÚÐ­ÒéË³Ðòµ÷Õû
+		//ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½É­ï¿½ã¹«Ê½1~7ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½//PCF8563ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ 0~6-->ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		if(7==Calendar.w_week)   Calendar.w_week=0;	//ï¿½ï¿½ï¿½ï¿½Ð­ï¿½ï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½
 		(0x80==(Calendar.w_month&0x80))?(Calendar.w_year+=1900):(Calendar.w_year+=2000);
-		Calendar_UI(&Calendar);	//µ÷ÓÃÈÕÀúÊ±¼äUI
+		Calendar_UI(&Calendar);	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½UI
 }
-/////////////////////////////////////¼ÆËãÐÇÆÚ///////////////////////////////////////////////////
+/////////////////////////////////////ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½///////////////////////////////////////////////////
 unsigned char Calc_Week(Calendar_obj *Calendar_info)
 {
-	unsigned int weektxt;//ÐÇÆÚ±äÁ¿
-	unsigned short int virt_yeartxt;//´´½¨Ò»¸öÐéÄâÊÊÓÃÓÚ»ùÄ·À­¶ûÉ­ËãÊ½µÄÄê±äÁ¿
-	unsigned char virt_monthtxt;//´´½¨Ò»¸öÐéÄâÊÊÓÃÓÚ»ùÄ·À­¶ûÉ­ËãÊ½µÄÔÂ±äÁ¿
-	virt_yeartxt=Calendar_info->w_year;//¸³Óè¸ø ÐéÄâÄê
-	virt_monthtxt=Calendar_info->w_month;//¸³Óè¸ø ÐéÄâÔÂ
-	//------------------------------Í¨¹ý¹«ÀúÄêÔÂÈÕÇóµÃÐÇÆÚ------------------------------------------------------
-	//°ÑÒ»ÔÂºÍ¶þÔÂ¿´³ÉÊÇÉÏÒ»ÄêµÄÊ®ÈýÔÂºÍÊ®ËÄÔÂ£¬Àý£ºÈç¹ûÊÇ2004-1-10Ôò»»Ëã³É£º2003-13-10À´´úÈë¹«Ê½¼ÆËã¡£
+	unsigned int weektxt;//ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½
+	unsigned short int virt_yeartxt;//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½Ä·ï¿½ï¿½ï¿½ï¿½É­ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	unsigned char virt_monthtxt;//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½Ä·ï¿½ï¿½ï¿½ï¿½É­ï¿½ï¿½Ê½ï¿½ï¿½ï¿½Â±ï¿½ï¿½ï¿½
+	virt_yeartxt=Calendar_info->w_year;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	virt_monthtxt=Calendar_info->w_month;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//------------------------------Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½------------------------------------------------------
+	//ï¿½ï¿½Ò»ï¿½ÂºÍ¶ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ê®ï¿½ï¿½ï¿½Âºï¿½Ê®ï¿½ï¿½ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2004-1-10ï¿½ï¿½ï¿½ï¿½É£ï¿½2003-13-10ï¿½ï¿½ï¿½ï¿½ï¿½ë¹«Ê½ï¿½ï¿½ï¿½ã¡£
 	if((1==Calendar_info->w_month)||(2==Calendar_info->w_month))
 	{		
-		virt_monthtxt+=12; //²úÉú 13/14
-		virt_yeartxt-=1;//¸³Óè¸ø ÐéÄâÄê
+		virt_monthtxt+=12; //ï¿½ï¿½ï¿½ï¿½ 13/14
+		virt_yeartxt-=1;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	}
-	//»ùÄ·À­¶ûÉ­ËãÊ½ ´Ë¹«Ê½ÊÇ 0~6±íÊ¾ÐÇÆÚÒ»ÖÁÐÇÆÚÈÕ
+	//ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½É­ï¿½ï¿½Ê½ ï¿½Ë¹ï¿½Ê½ï¿½ï¿½ 0~6ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	weektxt= (Calendar_info->w_date + 2*virt_monthtxt + 3*(virt_monthtxt+1)/5 + virt_yeartxt+virt_yeartxt/4 - virt_yeartxt/100 + virt_yeartxt/400)%7;
-	weektxt+=1;//1~7±íÊ¾ÐÇÆÚÒ»ÖÁÐÇÆÚÈÕ
+	weektxt+=1;//1~7ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	return (unsigned char)weektxt;
 }
 

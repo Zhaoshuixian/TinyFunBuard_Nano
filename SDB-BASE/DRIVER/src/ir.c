@@ -3,86 +3,87 @@
 #include "rrs.h"
 #include <string.h>
 #include <stdio.h>
-ir_st ir;
+
+infrade_st iinfrader;
 const unsigned char IR_ID=0;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Ir_StatusAnalyze(ir_st *ir_info)
+void Ir_StatusAnalyze(infrade_st *const me)
 {
-	if(ir_info->rec_status&0x80)			//ÉÏ´ÎÓÐÊý¾Ý±»½ÓÊÕµ½ÁË4.5MSµÄÖ¡Í·£¨ir_info->rec_status^7==1£©
+	if(me->rec_status&0x80)			//ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½4.5MSï¿½ï¿½Ö¡Í·ï¿½ï¿½me->rec_status^7==1ï¿½ï¿½
 	{	
-		ir_info->rec_status&=~0X10;                     //(ir_info->rec_status & 1110 1111)	È¡ÏûÉÏÉýÑØÒÑ¾­±»²¶»ñ±ê¼Ç£¨ir_info->rec_status^4=0£©
-		//**ir_info->rec_status&=~(1<<5);                     //(ir_info->rec_status & 1110 1111)	È¡ÏûÉÏÉýÑØÒÑ¾­±»²¶»ñ±ê¼Ç£¨ir_info->rec_status^4=0£©
-		if((ir_info->rec_status&0X0F)==0X00)  ir_info->rec_status|=1<<6;//±ê¼ÇÒÑ¾­Íê³ÉÒ»´Î°´¼üµÄ¼üÖµÐÅÏ¢²É¼¯£¨ir_info->rec_status^6=1£©
-		//** if((ir_info->rec_status&0X0F)==0X00)  ir_info->rec_status|=0x40;//±ê¼ÇÒÑ¾­Íê³ÉÒ»´Î°´¼üµÄ¼üÖµÐÅÏ¢²É¼¯£¨ir_info->rec_status^6=1£©
-		if((ir_info->rec_status&0X0F)<14)     ir_info->rec_status++;
+		me->rec_status&=~0X10;                     //(me->rec_status & 1110 1111)	È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç£ï¿½me->rec_status^4=0ï¿½ï¿½
+		//**me->rec_status&=~(1<<5);                     //(me->rec_status & 1110 1111)	È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç£ï¿½me->rec_status^4=0ï¿½ï¿½
+		if((me->rec_status&0X0F)==0X00)  me->rec_status|=1<<6;//ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î°ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½Öµï¿½ï¿½Ï¢ï¿½É¼ï¿½ï¿½ï¿½me->rec_status^6=1ï¿½ï¿½
+		//** if((me->rec_status&0X0F)==0X00)  me->rec_status|=0x40;//ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î°ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½Öµï¿½ï¿½Ï¢ï¿½É¼ï¿½ï¿½ï¿½me->rec_status^6=1ï¿½ï¿½
+		if((me->rec_status&0X0F)<14)     me->rec_status++;
 		else
 		{
-			ir_info->rec_status&=~(1<<7);		         //Çå¿ÕÒýµ¼±êÊ¶£¨ir_info->rec_status^7=0£©
-			ir_info->rec_status&=0XF0;			//Çå¿Õ¼ÆÊýÆ÷	(ir_info->rec_status & 1111 0000)
-			//**ir_info->rec_status&=(F<<4);	       //Çå¿Õ¼ÆÊýÆ÷	(ir_info->rec_status & 1111 0000)
+			me->rec_status&=~(1<<7);		         //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½me->rec_status^7=0ï¿½ï¿½
+			me->rec_status&=0XF0;			//ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½	(me->rec_status & 1111 0000)
+			//**me->rec_status&=(F<<4);	       //ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½	(me->rec_status & 1111 0000)
 		}								 	   	
 	}		
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Ir_WaveAnalyze(ir_st *ir_info)
+void Ir_WaveAnalyze(infrade_st *const me)
 {
-	if(IR_DATA())//²¶»ñµ½ÉÏÉýÑØ¡¾9msÖ¡Í·µÄ²¶»ñ¡¿
+	if(IR_DATA())//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¡ï¿½9msÖ¡Í·ï¿½Ä²ï¿½ï¿½ï¿½
 	{ 
-		TIM_OC1PolarityConfig(TIM1,TIM_ICPolarity_Falling);	//CC4P=1  ÉèÖÃÎªÏÂ½µÑØ²¶»ñ
-		TIM_SetCounter(TIM1,0);					//Çå¿Õ¶¨Ê±Æ÷Öµ
-		ir_info->rec_status|=0X10;					//±ê¼ÇÉÏÉýÑØÒÑ¾­±»²¶»ñ£¨ir_info->rec_status^4=1£©
+		TIM_OC1PolarityConfig(TIM1,TIM_ICPolarity_Falling);	//CC4P=1  ï¿½ï¿½ï¿½ï¿½Îªï¿½Â½ï¿½ï¿½Ø²ï¿½ï¿½ï¿½
+		TIM_SetCounter(TIM1,0);					//ï¿½ï¿½Õ¶ï¿½Ê±ï¿½ï¿½Öµ
+		me->rec_status|=0X10;					//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½me->rec_status^4=1ï¿½ï¿½
 	}                                                   
-	else //Èô²¶×½µ½ÏÂ½µÑØ
+	else //ï¿½ï¿½ï¿½ï¿½×½ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½
 	{
-		ir.rec_dval=TIM_GetCapture1(TIM1);				//¶ÁÈ¡CCR4Ò²¿ÉÒÔÇåCC4IF±êÖ¾Î»
-		TIM_OC1PolarityConfig(TIM1,TIM_ICPolarity_Rising);      //CC4P=0  ÉèÖÃÎªÉÏÉýÑØ²¶»ñ 
-		if(ir.rec_dval>4200&&ir.rec_dval<4700) //¡¾4.5msµÄÖ¡Í·²¶»ñ¡¿
+		ir.rec_dval=TIM_GetCapture1(TIM1);				//ï¿½ï¿½È¡CCR4Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½CC4IFï¿½ï¿½Ö¾Î»
+		TIM_OC1PolarityConfig(TIM1,TIM_ICPolarity_Rising);      //CC4P=0  ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ø²ï¿½ï¿½ï¿½ 
+		if(ir.rec_dval>4200&&ir.rec_dval<4700) //ï¿½ï¿½4.5msï¿½ï¿½Ö¡Í·ï¿½ï¿½ï¿½ï¿½
 		{
-			ir_info->rec_status|=1<<7;	         //±ê¼Ç³É¹¦½ÓÊÕµ½ÁËÒýµ¼Âë
-					//**ir_info->rec_status|=0x80;         //±ê¼Ç³É¹¦½ÓÊÕµ½ÁËÒýµ¼Âë
-			ir.rec_num=0;		//Çå³ý°´¼ü´ÎÊý¼ÆÊýÆ÷
+			me->rec_status|=1<<7;	         //ï¿½ï¿½Ç³É¹ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+					//**me->rec_status|=0x80;         //ï¿½ï¿½Ç³É¹ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			ir.rec_num=0;		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
-		else if((ir_info->rec_status&0X10)&&(ir_info->rec_status&0X80))//½ÓÊÕµ½Òýµ¼Âë±êÖ¾ÐÅºÅµçÆ½¡¾9ms + 4.5ms¡¿
+		else if((me->rec_status&0X10)&&(me->rec_status&0X80))//ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ÅºÅµï¿½Æ½ï¿½ï¿½9ms + 4.5msï¿½ï¿½
 		{			
-			if(ir.rec_dval>300&&ir.rec_dval<800)	      //560Îª±ê×¼Öµ,560us
+			if(ir.rec_dval>300&&ir.rec_dval<800)	      //560Îªï¿½ï¿½×¼Öµ,560us
 			{
-				 ir.rec_data<<=1;		     //×óÒÆÒ»Î».
-				 ir.rec_data|=0;	            //½ÓÊÕµ½0	   
+				 ir.rec_data<<=1;		     //ï¿½ï¿½ï¿½ï¿½Ò»Î».
+				 ir.rec_data|=0;	            //ï¿½ï¿½ï¿½Õµï¿½0	   
 			}
-			else if(ir.rec_dval>1400&&ir.rec_dval<1800)   //1680Îª±ê×¼Öµ,1680us
+			else if(ir.rec_dval>1400&&ir.rec_dval<1800)   //1680Îªï¿½ï¿½×¼Öµ,1680us
 			{
-			 ir.rec_data<<=1;		    //×óÒÆÒ»Î».
-			 ir.rec_data|=1;		    //½ÓÊÕµ½1
+			 ir.rec_data<<=1;		    //ï¿½ï¿½ï¿½ï¿½Ò»Î».
+			 ir.rec_data|=1;		    //ï¿½ï¿½ï¿½Õµï¿½1
 			}
-			else if(ir.rec_dval>2200&&ir.rec_dval<2600)  //µÃµ½°´¼ü¼üÖµÔö¼ÓµÄÐÅÏ¢ 2500Îª±ê×¼Öµ
+			else if(ir.rec_dval>2200&&ir.rec_dval<2600)  //ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½Ï¢ 2500Îªï¿½ï¿½×¼Öµ
 		 {
-			 ir.rec_num++; 	          //°´¼ü´ÎÊýÔö¼Ó1´Î
-			 ir_info->rec_status&=0XF0;	         //Çå¿Õ¼ÆÊ±Æ÷		
+			 ir.rec_num++; 	          //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½
+			 me->rec_status&=0XF0;	         //ï¿½ï¿½Õ¼ï¿½Ê±ï¿½ï¿½		
 		 }
 	 }					 
-		ir_info->rec_status&=~(1<<4);      //ir_info->rec_status^4=0
-		//**ir_info->rec_status&=~0x10;      //ir_info->rec_status^4=0
+		me->rec_status&=~(1<<4);      //me->rec_status^4=0
+		//**me->rec_status&=~0x10;      //me->rec_status^4=0
 	}	
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Ir_CodeAnalyze(ir_st *ir_info)
+void Ir_CodeAnalyze(infrade_st *const me)
 {	
-	if(ir_info->rec_status&(1<<6))//µÃµ½Ò»¸ö°´¼üµÄËùÓÐÐÅÏ¢ÁË£¨ir_info->rec_status^6==1£©
+	if(me->rec_status&(1<<6))//ï¿½Ãµï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ë£ï¿½me->rec_status^6==1ï¿½ï¿½
 	{ 
-		ir_info->data.addr =(ir_info->rec_data>>24)&0xFF;		      //µÃµ½µØÂë(Addr)
-		ir_info->data.addrn=(ir_info->rec_data>>16)&0xFF;	//µÃµ½µØÖ··´Âë(AddrN)
-		ir_info->data.cmd =(ir_info->rec_data>>8)&0xFF;           //µÃµ½ÃüÁîÂë(Cmd)
-		ir_info->data.cmdn =ir_info->rec_data&0xFF;             //µÃµ½ÃüÁî·´Âë(CmdN) 				
-		if((ir_info->data.addr==(unsigned char)~ir.data.addrn)&&(ir_info->data.addr==IR_ID)&&(ir_info->data.cmd==(unsigned char)~ir_info->data.cmdn))//¼ìÑéÒ£¿ØÊ¶±ðÂë(ID)¼°µØÖ·ºÍÃüÁî£¨¾À´í£© 
+		me->data.addr =(me->rec_data>>24)&0xFF;		      //ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½(Addr)
+		me->data.addrn=(me->rec_data>>16)&0xFF;	//ï¿½Ãµï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½(AddrN)
+		me->data.cmd =(me->rec_data>>8)&0xFF;           //ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(Cmd)
+		me->data.cmdn =me->rec_data&0xFF;             //ï¿½Ãµï¿½ï¿½ï¿½ï¿½î·´ï¿½ï¿½(CmdN) 				
+		if((me->data.addr==(unsigned char)~ir.data.addrn)&&(me->data.addr==IR_ID)&&(me->data.cmd==(unsigned char)~me->data.cmdn))//ï¿½ï¿½ï¿½ï¿½Ò£ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½(ID)ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½î£¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 		{
-			ir_info->valid_data=ir_info->data.cmd;//¼üÖµÕýÈ·		
+			me->valid_data=me->data.cmd;//ï¿½ï¿½Öµï¿½ï¿½È·		
 		}   			
-		if((0==ir_info->valid_data)||(0==(ir_info->rec_status&0x80)))//°´¼üÊý¾Ý´íÎó/Ò£¿ØÒÑ¾­Ã»ÓÐ°´ÏÂÁË
+		if((0==me->valid_data)||(0==(me->rec_status&0x80)))//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½/Ò£ï¿½ï¿½ï¿½Ñ¾ï¿½Ã»ï¿½Ð°ï¿½ï¿½ï¿½ï¿½ï¿½
 		{
-			ir_info->rec_status&=~(1<<6);//Çå³ý½ÓÊÕµ½ÓÐÐ§°´¼ü±êÊ¶ ir_info->rec_status^6=0
-			ir_info->rec_num=0;	 //Çå³ý°´¼ü´ÎÊý¼ÆÊýÆ÷
+			me->rec_status&=~(1<<6);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¶ me->rec_status^6=0
+			me->rec_num=0;	 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
 	}	
 }
@@ -91,24 +92,16 @@ void Ir_CodeAnalyze(ir_st *ir_info)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void IR_IRQHandler(void)
 { 		    	  
-	if(TIM_GetITStatus(TIM1,TIM_IT_Update)!=RESET) //¼ì²âÊÇ·ñ·¢ÉúÒç³ö¸üÐÂÖÐ¶ÏÊÂ¼þ£¨¼´²¶»ñµÄÐÅºÅÖÜÆÚ´óÓÚÉè¶¨µÄ10MS£©£¬ÅÐ¶ÏÖ¡Í·Ç°9ms
+	if(TIM_GetITStatus(TIM1,TIM_IT_Update)!=RESET) //
 	{
 		Ir_StatusAnalyze(&ir);			    
 	}
-	if(TIM_GetITStatus(TIM1,TIM_IT_CC1)!=RESET) //¼ì²âÊÇ·ñ·¢Éú²¶»ñÖÐ¶ÏÊÂ¼þ
+	if(TIM_GetITStatus(TIM1,TIM_IT_CC1)!=RESET) //
 	{	  
 		Ir_WaveAnalyze(&ir);	 		     	    					   
 	}
-  TIM_ClearITPendingBit(TIM1,TIM_IT_Update|TIM_IT_CC1);	 //Çå³ýÖÐ¶ÏÊÂ¼þ±êÖ¾Î»	    
+  TIM_ClearITPendingBit(TIM1,TIM_IT_Update|TIM_IT_CC1);	 //	    
 }
 
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void IR_Thread(void)
-{   
-	Ir_CodeAnalyze(&ir);
-//	Ir_UI(&ir);
-}
 
 

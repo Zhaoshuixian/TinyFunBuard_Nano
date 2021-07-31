@@ -8,16 +8,16 @@
 
 extern volatile  unsigned short  ADC_ConvertedValue; 
 
-Environ_sensor Temperature;
+sensor_st thermal;
 
 ntc_st  ntc=
 {
 	{
-		//-1	 -2  -3   -4   -5	-6	 -7   -8   -9  -10-----¶ÔÓ¦ÎÂ¶È
+		//-1	 -2  -3   -4   -5	-6	 -7   -8   -9  -10-----ï¿½ï¿½Ó¦ï¿½Â¶ï¿½
 		3169,3205,3240,3275,3308,3341,3373,3404,3434,3463,
-		//-11 -12 -13 -14 -15 -16 -17 -18 -19 -20-----¶ÔÓ¦ÎÂ¶È
+		//-11 -12 -13 -14 -15 -16 -17 -18 -19 -20-----ï¿½ï¿½Ó¦ï¿½Â¶ï¿½
 		3492,3519,3545,3570,3590,3620,3643,3664,3686,3706,
-		//-21 -22 -23 -24 -25 -26 -27 -28 -29 -30-----¶ÔÓ¦ÎÂ¶È
+		//-21 -22 -23 -24 -25 -26 -27 -28 -29 -30-----ï¿½ï¿½Ó¦ï¿½Â¶ï¿½
 		//	834,843,849,857,865,873,877,887,893,900,
 	},
 	{	
@@ -31,7 +31,7 @@ ntc_st  ntc=
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-unsigned char Find_Tab(unsigned short int cData,const unsigned short int  pTab[],unsigned char pTab_len)// ÐÎ²Î:µ±Ç°Êý¾Ý | Ë÷Òý±í | ±í³¤¶È
+unsigned char Find_Tab(unsigned short int cData,const unsigned short int  pTab[],unsigned char pTab_len)// ï¿½Î²ï¿½:ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ | ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ | ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 	
 //  struct 
@@ -45,27 +45,27 @@ unsigned char Find_Tab(unsigned short int cData,const unsigned short int  pTab[]
 	unsigned char tab_e;  //V-T imageTab endian position 
 	unsigned char tab_c=0; //V-T image current position
   unsigned char k=0;
-	tab_e=pTab_len-1;//±íÄ©¶ËÎ»ÖÃ¼´Îª±í³¤¶ÈÖµ-1
+	tab_e=pTab_len-1;
 	
-	if(pTab[tab_s]<=cData) //Èç¹ûµ±Ç°Êý¾ÝÐ¡ÓÚµÈÓÚ±íÊ×Êý¾Ý
+	if(pTab[tab_s]<=cData) //
 	
-		return tab_s; //Ôòµ±Ç°Êý¾Ý¼´Îª±íÊ×Öµ
+		return tab_s; //
 	
-	else if(pTab[tab_e]>=cData) //Èç¹ûµ±Ç°Êý¾Ý´óÓÚµÈÓÚ±íÎ²Êý¾Ý
+	else if(pTab[tab_e]>=cData) //
 	
-		return tab_e;//Ôòµ±Ç°Êý¾Ý¼´Îª±íÎ²Öµ
+		return tab_e;//
 	
-		for(;tab_s<tab_e;)//ËÑË÷È«±í
+		for(;tab_s<tab_e;)//
 		{
-			tab_c=(tab_s+tab_e)/2; //´Ó±íÖÐ¼ä²éÆð
+			tab_c=(tab_s+tab_e)/2;
 			if(pTab[tab_c]==cData) break;
-			if(pTab[tab_c]>cData&&cData>pTab[tab_c+1]) break; //Èô Êý¾ÝÐ¡ÓÚ±íÖÐ¼äÖµ£¬ÔòÒÔµ±Ç°Î»ÖÃÎª±íÎ²²éÆð
+			if(pTab[tab_c]>cData&&cData>pTab[tab_c+1]) break; 
 			if(cData>pTab[tab_c])  tab_e=tab_c;
 			else  tab_s=tab_c;
 			if(k++>pTab_len) break;
 		}
 		if(tab_s>tab_e) return 0;
-	return tab_c;//·µ»Ø  µ±Ç°µÄ±íÎ»ÖÃ¼´ÎªËùÇóÓ³ÉäÖµ
+	return tab_c;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,30 +81,25 @@ void Averg_Val(unsigned short int base_val,unsigned char n)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-void Temperature_Get(Environ_sensor *Temperature_Info)//»ñµÃÎÂ¶ÈÊý¾Ý
+void thermal_read(sensor_st *const me)//ï¿½ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 	Averg_Val(ADC_ConvertedValue,10);
+
 	if(835<=ADC_ConvertedValue&&ADC_ConvertedValue<=3132)
 	{
-		Temperature_Info->value=Find_Tab(ADC_ConvertedValue,ntc.adc_tabH,60);
+		me->value=Find_Tab(ADC_ConvertedValue,ntc.adc_tabH,60);
 	}
 	if(3169<=ADC_ConvertedValue&&ADC_ConvertedValue<=3706)
 	{
-		Temperature_Info->value=Find_Tab(ADC_ConvertedValue,ntc.adc_tabL,20);		
+		me->value=Find_Tab(ADC_ConvertedValue,ntc.adc_tabL,20);		
 	}
 	if(0!=ADC_ConvertedValue)
 	{
-    Temperature_Info->online=1;		
+    me->online=1;		
 	}
 	else
 	{
-		Temperature_Info->online=0;	
+		me->online=0;	
 	}
 }
 
-
-void Temperature_Thread(void)
-{
-	Temperature_Get(&Temperature);
-
-}

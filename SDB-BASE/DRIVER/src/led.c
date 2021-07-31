@@ -1,57 +1,52 @@
 
 #include "led.h"
 
-/*
--------------Éè±¸¶ÔÏóid--------------------boolÇý¶¯Á¿----------------------
-Éí·Ý×¢²á-------------------->µ÷ÓÃÇý¶¯º¯Êý--------------------->µ÷ÓÃµ×²ãÓ²¼þ½Ó¿Ú
-*/
-
 led_st led[2];
 
 ////////////////////////////////////////////////////////////////////////
-void hw_port_creat(unsigned char io_bool)           //Ó²¼þµ×²ãIOº¯Êý´´½¨
+void hw_port_creat(unsigned char io_bool)           //Ó²ï¿½ï¿½ï¿½×²ï¿½IOï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 //	io_bool?(RLED_SW(1)):(RLED_SW(0));
 	io_bool?(BLED_SW(1)):(BLED_SW(0));
 }
 
 ////////////////////////////////////////////////////////////////////////
-void hw_creat_cb(void(*hw_port_cb)(unsigned char),unsigned char io_bool)//Ó²¼þµ×²ãIOº¯Êý»Øµ÷
+void hw_creat_cb(void(*hw_port_cb)(unsigned char),unsigned char io_bool)//Ó²ï¿½ï¿½ï¿½×²ï¿½IOï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½
 {
 	hw_port_cb(io_bool);
 }
 
 ///////////////////////////////////////////////////////////////////////
-void hw_layer_cb(led_st *led_info) //
+void hw_layer_cb(led_st *const me) //
 {
-	hw_creat_cb(hw_port_creat,led_info->rt_intvl);
+	hw_creat_cb(hw_port_creat,me->rt_intvl);
 }
 
 ////////////////////////////////////////////////////////////////////////
-void led_drive_implement(led_st *led_info,unsigned int TASK_SLICE)  //Çý¶¯Ð§¹ûÊµÏÖ
+void led_driver(led_st *const me,unsigned int TASK_SLICE)  //ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½Êµï¿½ï¿½
 {
-	if(0!=led_info->wink_num) //ÉÁË¸´ÎÊý
+	if(0!=me->wink_num) //ï¿½ï¿½Ë¸ï¿½ï¿½ï¿½ï¿½
 	{
-		led_info->rt_intvl=(led_info->rt_intvl+1)%(led_info->rtime/TASK_SLICE);//ÉÁË¸ÆµÂÊ
+		me->rt_intvl=(me->rt_intvl+1)%(me->rtime/TASK_SLICE);//ï¿½ï¿½Ë¸Æµï¿½ï¿½
 	}
 	else
 	{
-		led_info->rt_intvl=0; //
+		me->rt_intvl=0; //
 	}
-	hw_layer_cb(led_info);  //µ×²ãÓ²¼þ½Ó¿Úµ÷ÓÃ
+	hw_layer_cb(me);  //ï¿½×²ï¿½Ó²ï¿½ï¿½ï¿½Ó¿Úµï¿½ï¿½ï¿½
 }
 
-void led_creat(led_st *led_info,unsigned char num,unsigned int run_time,unsigned int TASK_SLICE)
+void led_create(led_st *const me,unsigned char num,unsigned int run_time,unsigned int TASK_SLICE)
 {
-	led_info->wink_num=num;
-	led_info->rtime=run_time;
-	led_drive_implement(led_info,TASK_SLICE);
+	me->wink_num=num;
+	me->rtime=run_time;
+	led_drive_implement(me,TASK_SLICE);
 }
 
 ////////////////////////////////////////////////////////////////////////
 void LED_Thread(void)
 {
-  led_creat(&led[0],1,500,LED_TASK_TIME); 
+  led_create(&led[0],1,500,LED_TASK_TIME); 
 }
 
 
